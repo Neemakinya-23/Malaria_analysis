@@ -34,6 +34,34 @@ Converted coded values to readable factors
 Performed analysis on this simplified dataset
 
 # visualizations
+### **Key Visualizations & Insights**  
+
+1. **Anemia Distribution**  
+   - *What it shows*: A bar chart revealing that **46% of children were not anemic**, while **27% had moderate anemia** (strongly linked to malaria).  
+   - *Why it matters*: Confirms known medical correlations between malaria and anemia severity.  
+
+2. **Malaria vs. Anemia**  
+   - *What it shows*: Grouped bars comparing malaria diagnosis across anemia levels. **Moderately anemic children had the highest malaria rates**.  
+   - *Takeaway*: Reinforces malaria’s role in causing anemia, especially in endemic areas.  
+
+3. **Bed Net Usage**  
+   - *What it shows*: Similar malaria rates in children **with/without nets**, suggesting:  
+     - Possible net ineffectiveness (damage, improper use).  
+     - Other dominant factors (location, resistance).  
+
+4. **Drug Prevalence**  
+   - *What it shows*: **AL (Artemether-Lumefantrine)** was the top-used antimalarial, aligning with WHO guidelines.  
+
+---
+
+### **Visualization Strengths**  
+- **Clear labeling**: Anemia levels and drug names are intuitive.  
+- **Actionable contrasts**: Compared malaria rates across key variables (anemia, nets, residence).  
+- **Color choices**: Used red/orange for malaria/severe anemia for quick interpretation.  
+ 
+
+*(All plots made with `ggplot2` in R.)*  
+
 
 
 
