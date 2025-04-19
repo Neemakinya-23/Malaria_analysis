@@ -38,7 +38,9 @@ Performed analysis on this simplified dataset
 
 1. **Anemia Distribution**  
    - *What it shows*: A bar chart revealing that **46% of children were not anemic**, while **27% had moderate anemia** (strongly linked to malaria).  
-   - *Why it matters*: Confirms known medical correlations between malaria and anemia severity.  
+   - *Why it matters*: Confirms known medical correlations between malaria and anemia severity.
+  
+     ![Anemia preview](distribution%20of%20Anemia%20levels%20among%20children.png)
 
 2. **Malaria vs. Anemia**  
    - *What it shows*: Grouped bars comparing malaria diagnosis across anemia levels. **Moderately anemic children had the highest malaria rates**.  
