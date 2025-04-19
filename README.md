@@ -19,13 +19,13 @@ head(children_record)
 I familiarized myself with standard malaria indicators and coding conventions used in global health datasets. 
 Below are some key terms and their representations in the data: 
 ml13e: Binary indicator for whether a child was tested for malaria
-0 = No
-1 = Yes
+- 0 = No
+- 1 = Yes
 
 s406: "Told child had malaria" (diagnosis result)
-0 = No
-1 = Yes
-2 = Don’t know
+- 0 = No
+- 1 = Yes
+- 2 = Don’t know
 
 # Simplified Data Workflow
 Imported data using haven::read_dta()
@@ -51,9 +51,15 @@ Performed analysis on this simplified dataset
 3. **Bed Net Usage**  
    - *What it shows*: Similar malaria rates in children **with/without nets**, suggesting:  
      - Possible net ineffectiveness (damage, improper use).  
-     - Other dominant factors (location, resistance).  
+     - Other dominant factors (location, resistance).
+    
+4. **Bed Net Usage**  
+   - *What it shows*: Malaria rates in children **rural** or **urban** residence, suggesting:  
+     -  Most children that have malaria are from the rural areas as compared to the children in urban
+   
+    ![Malaria against_region preview](malaria%20against%20residence.png) 
 
-4. **Drug Prevalence**  
+5. **Drug Prevalence**  
    - *What it shows*: **AL (Artemether-Lumefantrine)** was the top-used antimalarial, aligning with WHO guidelines.  
 
 ---
