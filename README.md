@@ -60,8 +60,8 @@ Performed analysis on this simplified dataset
     ![Malaria against_region preview](malaria%20against%20residence.png) 
 
 5. **Drug Prevalence**  
-   - *What it shows*: **AL (Artemether-Lumefantrine)** was the top-used antimalarial, aligning with WHO guidelines.  
-
+   - *What it shows*: **AL (Artemether-Lumefantrine)** was the top-used antimalarial, aligning with WHO guidelines.
+      ![Most_used_drug](most%20used%20drug.png) 
 ---
 
 ### **Visualization Strengths**  
