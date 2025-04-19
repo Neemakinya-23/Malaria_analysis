@@ -44,7 +44,9 @@ Performed analysis on this simplified dataset
 
 2. **Malaria vs. Anemia**  
    - *What it shows*: Grouped bars comparing malaria diagnosis across anemia levels. **Moderately anemic children had the highest malaria rates**.  
-   - *Takeaway*: Reinforces malaria’s role in causing anemia, especially in endemic areas.  
+   - *Takeaway*: Reinforces malaria’s role in causing anemia, especially in endemic areas.
+  
+     ![barchart preview](bar_chart.png)
 
 3. **Bed Net Usage**  
    - *What it shows*: Similar malaria rates in children **with/without nets**, suggesting:  
