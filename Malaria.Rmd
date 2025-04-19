@@ -1,0 +1,271 @@
+---
+title: "Malaria_Analysis"
+author: "Neema Muroki"
+date: "2025-04-12"
+output: pdf_document
+---
+
+```{r}
+# Load the necessary packages
+library(dplyr);
+library(ggplot2);
+library(haven);
+library(tidyverse);
+library(forcats);
+```
+
+
+```{r}
+children_record<- read_dta("C:/Users/HP/Documents/R_projects/Malaria_data/KEKR81FL.DTA")
+head(children_record)
+```
+
+#Explarotory Data Analysis
+*It's exploration timee..*
+It has a lot of columns let us extract only the most important
+
+```{r}
+# ml13e is a malaria code for malaria test 1 stands for yes child was tested for malaria 0 no the child wasn't
+attr(children_record$ml13e, "labels")
+```
+
+```{r}
+# Keep only relevant malaria variables
+Malaria_Children <- children_record %>%
+  select(caseid, scounty, szone, v024, v025, v106, v190,
+         ml101, ml0, v459, v460,
+         h22, h46b, h47, s406,
+         ml13a:ml13z, s413a:s413c,
+         hw53, hw55, hw56, hw57)
+
+```
+
+*getting to know my tables*
+```{r}
+sapply(Malaria_Children,function(x) attr(x,"label"))
+```
+
+*check different levels of the columns to better understand the data stored*
+
+```{r}
+levels(as_factor(Malaria_Children$hw57)) #anemia level
+```
+
+```{r}
+levels(as_factor(Malaria_Children$hw55)) #result of measurement -hemoglobin
+```
+```{r}
+levels(as_factor(Malaria_Children$hw53)) #"hemoglobin level (g/dl - 1 decimal)" 
+```
+```{r}
+levels(as_factor(Malaria_Children$s406 )) #"told child had malaria"
+```
+
+```{r}
+ levels(as_factor(Malaria_Children$ml101)) 
+```
+# Visualization
+
+```{r}
+table(as_factor(Malaria_Children$hw57)) #anemia level
+```
+Among children tested, 27.1% were moderately anemic, 46.2% were not anemic,24.2 were mildly anemic and 2.5% were severely anemic.
+
+```{r}
+# Create a frequency table
+anemia_table <- table(as_factor(Malaria_Children$hw57))
+anemia_df <- as.data.frame(anemia_table)
+colnames(anemia_df) <- c("Anemia_Level", "Count")
+
+# Plot
+ggplot(anemia_df, aes(x = Anemia_Level, y = Count, fill = Anemia_Level)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("red", "orange", "yellow", "darkgreen")) +
+  labs(title = "Distribution of Anemia Levels in Children",
+       x = "Anemia Level",
+       y = "Number of Children") +
+  theme_minimal(base_size = 14)
+
+```
+
+# let us compare the level's of anemia level and whether they have malaria or not (told they have malaria)
+
+```{r}
+# Prepare the data
+plot_data <- Malaria_Children %>%
+  filter(!is.na(hw57), !is.na(s406)) %>%  # remove NAN
+  mutate(
+    Anemia_Level = as_factor(hw57),
+    Malaria_Status = as_factor(s406)
+  ) %>%
+  group_by(Anemia_Level, Malaria_Status) %>%
+  summarise(Count = n(), .groups = "drop")
+
+# Plot grouped bar chart
+ggplot(plot_data, aes(x = Anemia_Level, y = Count, fill = Malaria_Status)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  scale_fill_manual(values = c("forestgreen", "tomato", "gray")) +
+  labs(title = "Anemia Levels by Malaria Diagnosis Status",
+       x = "Anemia Level",
+       y = "Number of Children",
+       fill = "Malaria Diagnosis") +
+  theme_minimal(base_size = 14)
+
+```
+*Malaria and Anemia Are Strongly Linked*
+Among children who are moderately or mildly anemic, a noticeable proportion had malaria (orange bars).
+
+Most Non-Anemic Children Did Not Have Malaria
+In the "not anemic" group, the majority had no malaria (tall green bar).
+Children without anemia are less likely to have been diagnosed with malaria.
+
+Children with anemia — especially moderate and mild anemia — are more likely to be diagnosed with malaria. Conversely, children without anemia rarely report malaria, suggesting a strong association between malaria infection and anemia severity.
+
+# Malaria and Net 
+
+```{r}
+# Record ml101 into categories
+Malaria_Children <- Malaria_Children %>%
+  mutate(
+    net_use = case_when(
+      ml101 == 1 ~ "No Net",
+      ml101 == 2 ~ "Treated Net",
+      ml101 == 3 ~ "Untreated Net",
+      ml101 == 4 ~ "Both Treated & Untreated",
+      TRUE ~ "Unknown"
+    ),
+    malaria_result = as_factor(Malaria_Children$ml101)
+  )
+
+# Filter 'Unknown' 
+Malaria_Children_clean <- Malaria_Children %>%
+  filter(net_use != "Unknown")
+```
+
+
+```{r}
+levels(as_factor(Malaria_Children$ml101)) 
+```
+
+```{r}
+levels(as_factor(Malaria_Children$s406)) #told child had malaria 
+```
+
+
+```{r}
+Malaria_Children <- Malaria_Children %>%
+  mutate(
+    malaria_result = as_factor(s406), #told child had malaria
+    slept_under_net = case_when(
+      ml101 == 0 ~ "No",      # 0 = no net
+      ml101 > 0 ~ "Yes",      # 1, 2, 3 = some net type
+      TRUE ~ NA_character_    # catch NA/don't know
+    )
+  )
+```
+
+# Net against Malaria diagnostics
+
+Are children diagnosed with malaria more or less likely to have slept under a mosquito net?
+
+```{r}
+table(Malaria_Children$slept_under_net, Malaria_Children$malaria_result)
+```
+
+The proportion of malaria cases is almost the same between children who slept under nets and those who didn't.
+
+This might seem surprising, but it could mean:
+
+Some nets may be damaged, untreated, or improperly used
+
+Other factors like location, mosquito resistance, or exposure times might matter more
+
+It may indicate low statistical difference or noise in the data
+
+
+```{r}
+levels(as_factor(Malaria_Children$v025))#"type of place of residence"
+```
+v025 - place of residence
+s406 - told child had malaria
+
+```{r}
+ggplot(data = Malaria_Children_clean[!is.na(Malaria_Children_clean$v025) & !is.na(Malaria_Children_clean$s406), ], aes(x = as.factor(v025), fill = as.factor(s406))) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Malaria Diagnosis by Place of Residence",
+    x = "Type of Residence",
+    y = "Diagnosis of Malaria",
+    fill = "Told Child Had Malaria"
+  ) +
+  scale_x_discrete(labels = c("1" = "Urban", "2" = "Rural")) +
+  scale_fill_manual(values = c("0" = "steelblue", "1" = "tomato"), labels = c("No", "Yes"))
+
+```
+
+
+*Most children that have malaria are from the rural areas as compared to the children in urban*
+
+# Malaria Drugs 
+*Out of all the malaria drugs taken by children with fever, what % was each drug used?*
+
+```{r}
+malaria_drugs <- Malaria_Children_clean[ c("ml13a", "ml13b", "ml13c", "ml13d", "ml13da",
+                        "ml13aa", "ml13ab", "ml13e", "ml13f", "ml13g",
+                        "ml13h", "ml13i", "s413a", "s413b", "s413c")]
+```
+
+
+```{r}
+malaria_drugs <- as.data.frame(lapply(malaria_drugs, function(x) as.numeric(as.character(x))))
+```
+
+```{r}
+drug_totals <- colSums(malaria_drugs == 1, na.rm = TRUE)
+```
+
+
+```{r}
+drug_df <- data.frame(
+  Drug = names(drug_totals),
+  Count = as.numeric(drug_totals)
+)
+```
+
+
+```{r}
+drug_df$Drug <- recode(drug_df$Drug,
+  "ml13a" = "Fansidar",
+  "ml13b" = "Chloroquine",
+  "ml13c" = "Amodiaquine",
+  "ml13d" = "Quinine",
+  "ml13da" = "Quinine Inj.",
+  "ml13aa" = "Artesunate Rectal",
+  "ml13ab" = "Artesunate Inj.",
+  "ml13e" = "ACT Combo",
+  "ml13f" = "CS Antimalarial 1",
+  "ml13g" = "CS Antimalarial 2",
+  "ml13h" = "CS Antimalarial 3",
+  "ml13i" = "Other Antimalarial",
+  "s413a" = "AL",
+  "s413b" = "DHA-P",
+  "s413c" = "Other ACT"
+)
+
+```
+
+
+```{r}
+ggplot(drug_df, aes(x = reorder(Drug, -Count), y = Count, fill = Drug)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() +
+  labs(
+    title = "Most Commonly Used Malaria Drugs",
+    x = "Drug",
+    y = "Number of Children Who Took the Drug"
+  ) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  guides(fill = "none")
+
+```
+AL (Artemether-Lumefantrine) was the most commonly used antimalarial drug among children with fever in the last two weeks, accounting for the highest proportion of treatments recorded in the data set.
