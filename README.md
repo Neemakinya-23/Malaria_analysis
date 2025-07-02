@@ -47,19 +47,14 @@ Performed analysis on this simplified dataset
    - *Takeaway*: Reinforces malaria’s role in causing anemia, especially in endemic areas.
   
      ![barchart preview](bar_chart.png)
-
-3. **Bed Net Usage**  
-   - *What it shows*: Similar malaria rates in children **with/without nets**, suggesting:  
-     - Possible net ineffectiveness (damage, improper use).  
-     - Other dominant factors (location, resistance).
     
-4. **Bed Net Usage**  
+3. **Bed Net Usage**  
    - *What it shows*: Malaria rates in children **rural** or **urban** residence, suggesting:  
      -  Most children that have malaria are from the rural areas as compared to the children in urban
    
     ![Malaria against_region preview](malaria%20against%20residence.png) 
 
-5. **Drug Prevalence**  
+4. **Drug Prevalence**  
    - *What it shows*: **AL (Artemether-Lumefantrine)** was the top-used antimalarial, aligning with WHO guidelines.
       ![Most_used_drug](most%20used%20drug.png) 
 ---
